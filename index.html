@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MotoPlanner</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">MP</span>
+          <div>
+            <p>MotoPlanner</p>
+            <span>Planilha inteligente da operacao</span>
+          </div>
+        </div>
+        <div class="month-controls" aria-label="Mes de analise">
+          <button type="button" id="monthPrevBtn" aria-label="Mes anterior">‹</button>
+          <div class="month-chip" id="currentMonthLabel">Mes atual</div>
+          <button type="button" id="monthNextBtn" aria-label="Proximo mes">›</button>
+          <button type="button" id="monthTodayBtn">Hoje</button>
+        </div>
+      </header>
+
+      <nav class="app-nav" aria-label="Navegacao principal">
+        <button class="active" type="button" data-page="dashboard">Dashboard</button>
+        <button type="button" data-page="entry">Lancar dia</button>
+        <button type="button" data-page="costs">Custos</button>
+        <button type="button" data-page="finance">Financiamento</button>
+        <button type="button" data-page="config">Configuracoes</button>
+      </nav>
+
+      <main>
+        <section class="app-page active" id="dashboardPage" data-page-panel="dashboard">
+          <section class="hero-card result-hero">
+            <div class="hero-copy">
+              <span>Resultado do mes - competencia</span>
+              <strong id="monthCompetenceHero">R$ 0,00</strong>
+              <small id="monthRealityNote">Custos fixos entram mesmo antes da primeira corrida.</small>
+            </div>
+            <div class="hero-side">
+              <div>
+                <span>Proporcional</span>
+                <strong id="monthProportionalHero">R$ 0,00</strong>
+              </div>
+              <div>
+                <span>Operacional</span>
+                <strong id="monthOperationalHero">R$ 0,00</strong>
+              </div>
+              <div>
+                <span>Caixa total</span>
+                <strong id="dashboardCashHero">R$ 0,00</strong>
+              </div>
+            </div>
+          </section>
+
+          <section class="metrics-grid dashboard-kpis" id="dashboardGrid">
+            <article class="metric-card accent-red">
+              <span>Resultado competencia</span>
+              <strong id="competenceNetProfitMetric">R$ 0,00</strong>
+            </article>
+            <article class="metric-card accent-yellow">
+              <span>Resultado proporcional</span>
+              <strong id="proportionalNetProfitMetric">R$ 0,00</strong>
+            </article>
+            <article class="metric-card accent-green">
+              <span>Lucro operacional</span>
+              <strong id="operationalProfitMetric">R$ 0,00</strong>
+            </article>
+            <article class="metric-card accent-blue">
+              <span>Receita do mes</span>
+              <strong id="monthRevenueMetric">R$ 0,00</strong>
+            </article>
+            <article class="metric-card accent-purple">
+              <span>Dias rodados</span>
+              <strong id="daysFilledMetric">0</strong>
+            </article>
+            <article class="metric-card accent-yellow">
+              <span>Horas/dia rod.</span>
+              <strong id="avgHoursPerDayMetric">R$ 0,00</strong>
+            </article>
+            <article class="metric-card accent-green">
+              <span>Caixa total</span>
+              <strong id="cashBalanceMetric">R$ 0,00</strong>
+            </article>
+            <article class="metric-card accent-red">
+              <span>Buraco restante</span>
+              <strong id="monthHoleMetric">R$ 0,00</strong>
+            </article>
+            <article class="metric-card">
+              <span>Margem operacional</span>
+              <strong id="operationalMarginMetric">0%</strong>
+            </article>
+            <article class="metric-card">
+              <span>Margem liquida real</span>
+              <strong id="realNetMarginMetric">0%</strong>
+            </article>
+            <article class="metric-card">
+              <span>KM morto</span>
+              <strong id="deadKmPctMetric">0%</strong>
+            </article>
+            <article class="metric-card">
+              <span>Receita por hora</span>
+              <strong id="revenueHourMetric">R$ 0,00</strong>
+            </article>
+            <article class="metric-card">
+              <span>Lucro por hora</span>
+              <strong id="profitHourMetric">R$ 0,00</strong>
+            </article>
+            <article class="metric-card wide-card accent-green">
+              <span>Projecao do mes</span>
+              <strong id="monthProjectionMetric">R$ 0,00</strong>
+            </article>
+          </section>
+
+          <section class="content-grid">
+            <section class="panel hole-panel">
+              <div class="panel-title">
+                <div>
+                  <span>Buraco do mes</span>
+                  <h2>Custos fixos existem mesmo sem rodar</h2>
+                </div>
+              </div>
+              <div class="hole-summary">
+                <strong id="fixedCostsCoverageText">Voce cobriu R$ 0,00 de R$ 0,00.</strong>
+                <span id="fixedCostsRemainingText">Sem custos fixos configurados.</span>
+              </div>
+              <div class="goal-meter">
+                <span id="fixedCostsCoverageBar"></span>
+              </div>
+              <div class="mini-grid">
+                <article>
+                  <span>Custos fixos totais</span>
+                  <strong id="fixedCostsTotalMetric">R$ 0,00</strong>
+                </article>
+                <article>
+                  <span>Coberto</span>
+                  <strong id="fixedCostsCoveredMetric">R$ 0,00</strong>
+                </article>
+                <article>
+                  <span>Falta cobrir</span>
+                  <strong id="fixedCostsRemainingMetric">R$ 0,00</strong>
+                </article>
+                <article>
+                  <span>Cobertura</span>
+                  <strong id="fixedCostsCoveragePctMetric">0%</strong>
+                </article>
+              </div>
+              <div class="fixed-cost-breakdown">
+                <div class="breakdown-title">Detalhamento dos custos fixos</div>
+                <ul id="fixedCostsBreakdownList"></ul>
+              </div>
+            </section>
+
+            <aside class="panel">
+              <div class="panel-title">
+                <div>
+                  <span>Distribuicao</span>
+                  <h2>Lucro, combustivel e custos</h2>
+                </div>
+              </div>
+              <div class="donut-wrap">
+                <div class="donut-chart" id="distributionChart">
+                  <span id="chartCenterValue">R$ 0</span>
+                  <small>lucro</small>
+                </div>
+                <div class="legend" id="chartLegend"></div>
+              </div>
+              <p class="chart-note" id="chartNote"></p>
+            </aside>
+          </section>
+
+          <section class="panel">
+            <div class="panel-title">
+              <div>
+                <span>Metas e projecao</span>
+                <h2>Ritmo real do mes</h2>
+              </div>
+            </div>
+            <div class="projection-grid" id="projectionGrid"></div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-title">
+              <div>
+                <span>Comparativo rapido</span>
+                <h2 id="periodTitle">Mes atual</h2>
+              </div>
+              <p id="periodEntryCount">0 lancamentos</p>
+            </div>
+            <nav class="period-tabs" aria-label="Comparativos">
+              <button type="button" data-period="today">Hoje</button>
+              <button type="button" data-period="week">Semana</button>
+              <button class="active" type="button" data-period="month">Mes</button>
+              <button type="button" data-period="quarter">Trimestre</button>
+              <button type="button" data-period="year">Ano</button>
+            </nav>
+            <div class="mini-grid snapshot-grid" id="periodSnapshotGrid"></div>
+          </section>
+
+          <section class="content-grid reverse-mobile">
+            <section class="panel">
+              <div class="panel-title">
+                <div>
+                  <span>Tendencia</span>
+                  <h2>Indicadores por dia</h2>
+                </div>
+                <select id="trendRange">
+                  <option value="last7">Ultimos 7 dias</option>
+                  <option value="week">Semana atual</option>
+                  <option value="month">Mes atual</option>
+                </select>
+              </div>
+              <div class="trend-legend">
+                <span><i class="dot green"></i>Receita/km</span>
+                <span><i class="dot blue"></i>Lucro/km</span>
+                <span><i class="dot yellow"></i>Receita/h</span>
+                <span><i class="dot red"></i>KM morto</span>
+              </div>
+              <div class="trend-chart" id="trendChart"></div>
+            </section>
+
+            <aside class="panel">
+              <div class="panel-title">
+                <div>
+                  <span>Insights</span>
+                  <h2>Leitura automatica</h2>
+                </div>
+              </div>
+              <div class="insights-list" id="insightsList"></div>
+            </aside>
+          </section>
+
+          <section class="panel">
+            <div class="panel-title">
+              <div>
+                <span>Dia a dia</span>
+                <h2>Comparacao do mes</h2>
+              </div>
+            </div>
+            <div class="daily-table-wrap" id="dailyComparison"></div>
+          </section>
+        </section>
+
+        <section class="app-page" id="entryPage" data-page-panel="entry">
+          <section class="content-grid">
+            <section class="panel form-panel">
+              <div class="panel-title">
+                <div>
+                  <span>Lancamento diario</span>
+                  <h2 id="formTitle">Novo dia</h2>
+                </div>
+                <button class="ghost-button hidden" type="button" id="cancelEditBtn">Cancelar</button>
+              </div>
+
+              <form id="entryForm">
+                <input type="hidden" id="entryId" />
+
+                <div class="form-grid">
+                  <label>
+                    Data
+                    <input type="text" id="entryDate" inputmode="numeric" placeholder="dd/mm/aaaa" maxlength="10" pattern="\d{2}/\d{2}/\d{4}" required />
+                  </label>
+                  <label>
+                    Tipo de dia
+                    <select id="dayType">
+                      <option value="util">Util</option>
+                      <option value="sabado">Sabado</option>
+                      <option value="domingo">Domingo</option>
+                      <option value="feriado">Feriado</option>
+                    </select>
+                  </label>
+                  <label>
+                    Horas online
+                    <input type="number" id="hoursOnline" min="0" step="0.1" inputmode="decimal" />
+                  </label>
+                  <label>
+                    Horas efetivas
+                    <input type="number" id="hoursEffective" min="0" step="0.1" inputmode="decimal" />
+                  </label>
+                  <label>
+                    KM inicial
+                    <input type="number" id="kmInitial" min="0" step="0.1" inputmode="decimal" />
+                  </label>
+                  <label>
+                    KM final
+                    <input type="number" id="kmFinal" min="0" step="0.1" inputmode="decimal" />
+                  </label>
+                  <label>
+                    KM calculado
+                    <input type="number" id="kmCalculated" readonly tabindex="-1" />
+                  </label>
+                  <label>
+                    KM total manual
+                    <input type="number" id="kmTotalManual" min="0" step="0.1" inputmode="decimal" />
+                  </label>
+                  <label>
+                    KM remunerado
+                    <input type="number" id="kmPaid" min="0" step="0.1" inputmode="decimal" />
+                  </label>
+                  <label>
+                    Receita bruta
+                    <input type="number" id="grossRevenue" min="0" step="0.01" inputmode="decimal" />
+                  </label>
+                  <label>
+                    Gorjetas
+                    <input type="number" id="tips" min="0" step="0.01" inputmode="decimal" />
+                  </label>
+                  <label>
+                    Combustivel
+                    <input type="number" id="fuelCost" min="0" step="0.01" inputmode="decimal" />
+                  </label>
+                  <label>
+                    Modo combustivel
+                    <select id="fuelMode">
+                      <option value="auto">Calcular automaticamente</option>
+                      <option value="manual">Usar valor informado</option>
+                    </select>
+                  </label>
+                  <label>
+                    Outros custos
+                    <input type="number" id="otherCosts" min="0" step="0.01" inputmode="decimal" />
+                  </label>
+                  <label>
+                    Numero de corridas
+                    <input type="number" id="rides" min="0" step="1" inputmode="numeric" />
+                  </label>
+                  <label>
+                    Clima
+                    <select id="weather">
+                      <option value="seco">Seco</option>
+                      <option value="chuva">Chuva</option>
+                      <option value="frio">Frio</option>
+                      <option value="calor">Calor</option>
+                    </select>
+                  </label>
+                  <label class="range-field">
+                    <span>Cansaco <b id="fatigueValue">3</b>/5</span>
+                    <input type="range" id="fatigue" min="1" max="5" value="3" />
+                  </label>
+                  <label class="full-field">
+                    Observacoes
+                    <textarea id="notes" rows="3"></textarea>
+                  </label>
+                </div>
+
+                <div class="inline-note" id="fuelEstimateNote">Combustivel estimado: R$ 0,00</div>
+                <button class="primary-button" type="submit" id="saveEntryBtn">Salvar lancamento</button>
+              </form>
+            </section>
+
+            <aside class="panel">
+              <div class="panel-title">
+                <div>
+                  <span>Previa do dia</span>
+                  <h2>Antes de salvar</h2>
+                </div>
+              </div>
+              <div class="mini-grid preview-grid" id="entryPreview"></div>
+            </aside>
+          </section>
+
+          <section class="panel history-panel">
+            <div class="panel-title">
+              <div>
+                <span>Historico</span>
+                <h2>Lancamentos recentes</h2>
+              </div>
+              <div class="button-row history-bulk-actions">
+                <span id="selectedHistoryCount">0 selecionados</span>
+                <button class="ghost-button" type="button" id="toggleSelectAllBtn">Selecionar todos</button>
+                <button class="danger-button" type="button" id="deleteSelectedBtn" disabled>Excluir selecionados</button>
+                <button class="danger-button" type="button" id="clearDataBtn">Limpar lancamentos</button>
+              </div>
+            </div>
+            <div class="history-list" id="historyList"></div>
+          </section>
+        </section>
+
+        <section class="app-page" id="configPage" data-page-panel="config">
+          <section class="panel config-hero">
+            <div class="panel-title">
+              <div>
+                <span>Configuracoes</span>
+                <h2>Base real da operacao</h2>
+              </div>
+              <div class="button-row">
+                <button class="ghost-button" type="button" id="exportDataBtn">Exportar JSON</button>
+                <button class="ghost-button" type="button" id="importDataBtn">Importar JSON</button>
+                <button class="danger-button" type="button" id="restoreDefaultsBtn">Restaurar padroes</button>
+                <input class="hidden" type="file" id="importFileInput" accept="application/json,.json" />
+              </div>
+            </div>
+            <p class="config-status" id="configStatus">Configuracoes salvas no banco local. Mudancas passam a valer a partir de hoje.</p>
+          </section>
+
+          <form id="configForm" class="config-sections">
+            <section class="panel config-section">
+              <div class="panel-title">
+                <div>
+                  <span>Dados gerais</span>
+                  <h2>Metas e periodo</h2>
+                </div>
+              </div>
+              <div class="config-grid">
+                <label>
+                  Data inicial do controle
+                  <input type="text" id="controlStartDate" inputmode="numeric" placeholder="dd/mm/aaaa" maxlength="10" pattern="\d{2}/\d{2}/\d{4}" />
+                </label>
+                <label>
+                  Dias de controle planejados
+                  <input type="number" id="plannedControlDays" min="1" step="1" inputmode="numeric" />
+                </label>
+                <label>
+                  Meta de receita mensal
+                  <input type="number" id="monthlyRevenueGoal" min="0" step="0.01" inputmode="decimal" />
+                </label>
+                <label>
+                  Meta de lucro liquido mensal
+                  <input type="number" id="monthlyNetProfitGoal" min="0" step="0.01" inputmode="decimal" />
+                </label>
+                <label class="full-field">
+                  Meta de lucro operacional mensal
+                  <input type="number" id="monthlyOperationalProfitGoal" min="0" step="0.01" inputmode="decimal" />
+                </label>
+              </div>
+            </section>
+
+            <section class="panel config-section">
+              <div class="panel-title">
+                <div>
+                  <span>Custos fixos mensais</span>
+                  <h2>Entram mesmo sem rodar</h2>
+                </div>
+              </div>
+              <div class="config-grid">
+                <label>
+                  Parcela da moto
+                  <input type="number" id="monthlyInstallment" min="0" step="0.01" inputmode="decimal" />
+                </label>
+                <label>
+                  Seguro mensal
+                  <input type="number" id="monthlyInsurance" min="0" step="0.01" inputmode="decimal" />
+                </label>
+                <label>
+                  Internet/celular
+                  <input type="number" id="monthlyPhone" min="0" step="0.01" inputmode="decimal" />
+                </label>
+                <label>
+                  Outros custos fixos mensais
+                  <input type="number" id="monthlyOtherFixed" min="0" step="0.01" inputmode="decimal" />
+                </label>
+              </div>
+
+              <div class="fixed-cost-items-section">
+                <div class="fixed-cost-items-header">
+                  <div>
+                    <span>Custos fixos extras</span>
+                    <p class="inline-note">Adicione itens mensais com nome, descrição e valor.</p>
+                  </div>
+                  <button type="button" class="ghost-button" id="addFixedCostItemBtn">Adicionar item</button>
+                </div>
+                <div class="table-wrap">
+                  <table id="monthlyFixedCostItemsTable">
+                    <thead>
+                      <tr>
+                        <th>Nome</th>
+                        <th>Descrição</th>
+                        <th>Valor mensal</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+
+            <section class="panel config-section">
+              <div class="panel-title">
+                <div>
+                  <span>Custos por km</span>
+                  <h2>Editavel com sugestao automatica</h2>
+                </div>
+                <button class="ghost-button" type="button" id="applySuggestedCostsBtn">Aplicar sugestoes</button>
+              </div>
+              <div class="config-grid cost-grid">
+                <label>
+                  Custo de oleo por km
+                  <input type="number" id="oilPerKm" min="0" step="0.001" inputmode="decimal" />
+                  <small id="oilPerKmSuggestion">Sugerido: R$ 0,000/km</small>
+                </label>
+                <label>
+                  Custo de pneu por km
+                  <input type="number" id="tirePerKm" min="0" step="0.001" inputmode="decimal" />
+                  <small id="tirePerKmSuggestion">Sugerido: R$ 0,000/km</small>
+                </label>
+                <label>
+                  Custo de relacao por km
+                  <input type="number" id="chainPerKm" min="0" step="0.001" inputmode="decimal" />
+                  <small id="chainPerKmSuggestion">Sugerido: R$ 0,000/km</small>
+                </label>
+                <label>
+                  Custo de freio por km
+                  <input type="number" id="brakePerKm" min="0" step="0.001" inputmode="decimal" />
+                  <small id="brakePerKmSuggestion">Sugerido: R$ 0,000/km</small>
+                </label>
+                <label>
+                  Reserva de revisao por km
+                  <input type="number" id="reviewReservePerKm" min="0" step="0.001" inputmode="decimal" />
+                </label>
+                <label>
+                  Reserva manutencao extra por km
+                  <input type="number" id="extraMaintenancePerKm" min="0" step="0.001" inputmode="decimal" />
+                </label>
+              </div>
+            </section>
+
+            <section class="panel config-section">
+              <div class="panel-title">
+                <div>
+                  <span>Parametros de pecas</span>
+                  <h2>Base das sugestoes por km</h2>
+                </div>
+              </div>
+              <div class="config-grid">
+                <label>
+                  Valor estimado do par de pneus
+                  <input type="number" id="tireSetValue" min="0" step="0.01" inputmode="decimal" />
+                </label>
+                <label>
+                  Vida util dos pneus em km
+                  <input type="number" id="tireLifeKm" min="1" step="1" inputmode="numeric" />
+                </label>
+                <label>
+                  Valor da troca de oleo
+                  <input type="number" id="oilChangeValue" min="0" step="0.01" inputmode="decimal" />
+                </label>
+                <label>
+                  Intervalo de troca de oleo em km
+                  <input type="number" id="oilChangeIntervalKm" min="1" step="1" inputmode="numeric" />
+                </label>
+                <label>
+                  Valor da relacao
+                  <input type="number" id="chainValue" min="0" step="0.01" inputmode="decimal" />
+                </label>
+                <label>
+                  Vida util da relacao em km
+                  <input type="number" id="chainLifeKm" min="1" step="1" inputmode="numeric" />
+                </label>
+                <label>
+                  Valor das pastilhas/freios
+                  <input type="number" id="brakeValue" min="0" step="0.01" inputmode="decimal" />
+                </label>
+                <label>
+                  Vida util dos freios em km
+                  <input type="number" id="brakeLifeKm" min="1" step="1" inputmode="numeric" />
+                </label>
+              </div>
+            </section>
+
+            <section class="content-grid config-bottom-grid">
+              <section class="panel config-section">
+                <div class="panel-title">
+                  <div>
+                    <span>Combustivel</span>
+                    <h2>Estimativa automatica</h2>
+                  </div>
+                </div>
+                <div class="config-grid">
+                  <label>
+                    Preco da gasolina por litro
+                    <input type="number" id="gasPricePerLiter" min="0" step="0.01" inputmode="decimal" />
+                  </label>
+                  <label>
+                    Consumo medio estimado km/l
+                    <input type="number" id="consumptionKmPerLiter" min="0" step="0.1" inputmode="decimal" />
+                  </label>
+                </div>
+              </section>
+
+              <section class="panel config-section">
+                <div class="panel-title">
+                  <div>
+                    <span>Financiamento</span>
+                    <h2>Simulacao de amortizacao</h2>
+                  </div>
+                  <button class="ghost-button" type="button" id="useProjectedProfitBtn">Usar lucro projetado</button>
+                </div>
+                <div class="config-grid">
+                  <label>
+                    Saldo devedor atual
+                    <input type="number" id="debtBalance" min="0" step="0.01" inputmode="decimal" />
+                  </label>
+                  <label>
+                    Parcelas restantes
+                    <input type="number" id="remainingInstallments" min="0" step="1" inputmode="numeric" />
+                  </label>
+                  <label>
+                    Juros mensal estimado
+                    <input type="number" id="monthlyInterestRate" min="0" step="0.01" inputmode="decimal" />
+                  </label>
+                  <label>
+                    Lucro liquido para amortizar
+                    <input type="number" id="amortizationSimulationAmount" min="0" step="0.01" inputmode="decimal" />
+                  </label>
+                </div>
+                <div class="mini-grid financing-grid" id="financingSimulation"></div>
+              </section>
+            </section>
+          </form>
+        </section>
+
+        <section class="app-page" id="costsPage" data-page-panel="costs">
+          <section class="content-grid">
+            <section class="panel form-panel">
+              <div class="panel-title">
+                <div>
+                  <span>Novo custo</span>
+                  <h2 id="costsFormTitle">Adicionar parcela</h2>
+                </div>
+                <button class="ghost-button hidden" type="button" id="cancelCostEditBtn">Cancelar</button>
+              </div>
+
+              <form id="costsItemForm">
+                <input type="hidden" id="costItemId" />
+
+                <div class="form-grid">
+                  <label>
+                    Tipo de custo
+                    <select id="costItemType" required>
+                      <option value="compra">Compra</option>
+                      <option value="conserto">Conserto</option>
+                      <option value="investimento">Investimento</option>
+                      <option value="outro">Outro</option>
+                    </select>
+                  </label>
+                  <label>
+                    Descricao
+                    <input type="text" id="costItemDescription" placeholder="Ex: Bau, revisao, pneu" required />
+                  </label>
+                  <label>
+                    Valor da parcela
+                    <input type="number" id="costItemAmount" min="0" step="0.01" inputmode="decimal" required />
+                  </label>
+                  <label>
+                    Data de inicio (MM/YYYY)
+                    <input type="text" id="costItemStartMonth" inputmode="numeric" placeholder="mm/aaaa" maxlength="7" required />
+                  </label>
+                  <label>
+                    Numero de parcelas
+                    <input type="number" id="costItemInstallments" min="1" step="1" inputmode="numeric" required />
+                  </label>
+                  <label class="full-field">
+                    Observacoes
+                    <textarea id="costItemNotes" rows="2"></textarea>
+                  </label>
+                </div>
+
+                <button class="primary-button" type="submit" id="saveCostItemBtn">Salvar custo</button>
+              </form>
+            </section>
+
+            <aside class="panel">
+              <div class="panel-title">
+                <div>
+                  <span>Resumo</span>
+                  <h2>Parcelas deste mes</h2>
+                </div>
+              </div>
+              <div class="mini-grid" id="costsMonthSummary"></div>
+            </aside>
+          </section>
+
+          <section class="panel history-panel">
+            <div class="panel-title">
+              <div>
+                <span>Parcelas ativas</span>
+                <h2>Mes atual</h2>
+              </div>
+              <div class="button-row history-bulk-actions">
+                <span id="selectedCostsCount">0 selecionados</span>
+                <button class="ghost-button" type="button" id="toggleSelectAllCostsBtn">Selecionar todos</button>
+                <button class="danger-button" type="button" id="deleteSelectedCostsBtn" disabled>Excluir selecionados</button>
+              </div>
+            </div>
+            <div class="daily-table-wrap" id="costsList"></div>
+          </section>
+
+          <section class="panel config-section">
+            <div class="panel-title">
+              <div>
+                <span>Parcelamentos configurados</span>
+                <h2>Compra e conserto (previsao mensal)</h2>
+              </div>
+            </div>
+            <form id="costsConfigForm" class="config-sections">
+              <div class="config-grid">
+                <label>
+                  Valor da parcela (baú/compra)
+                  <input type="number" id="purchaseInstallmentValue" min="0" step="0.01" inputmode="decimal" />
+                </label>
+                <label>
+                  Parcelas (baú/compra)
+                  <input type="number" id="purchaseInstallments" min="0" step="1" inputmode="numeric" />
+                </label>
+                <label>
+                  Primeiro vencimento (baú/compra)
+                  <input type="text" id="purchaseStartMonth" inputmode="numeric" placeholder="mm/aaaa" maxlength="7" />
+                </label>
+                <label>
+                  Valor da parcela (conserto)
+                  <input type="number" id="repairInstallmentValue" min="0" step="0.01" inputmode="decimal" />
+                </label>
+                <label>
+                  Parcelas (conserto)
+                  <input type="number" id="repairInstallments" min="0" step="1" inputmode="numeric" />
+                </label>
+                <label>
+                  Primeiro vencimento (conserto)
+                  <input type="text" id="repairStartMonth" inputmode="numeric" placeholder="mm/aaaa" maxlength="7" />
+                </label>
+              </div>
+            </form>
+          </section>
+        </section>
+
+        <section class="app-page" id="financePage" data-page-panel="finance">
+          <section class="hero-card finance-hero">
+            <div class="hero-copy">
+              <span>Financiamento</span>
+              <strong id="financeRemainingHero">R$ 0,00</strong>
+              <small id="financeSummaryNote">Cadastre o contrato para enxergar parcelas, juros e pagamentos.</small>
+            </div>
+            <div class="hero-side">
+              <div>
+                <span>Saldo de caixa</span>
+                <strong id="cashBalanceHero">R$ 0,00</strong>
+              </div>
+              <div>
+                <span>Amortizacao/desconto</span>
+                <strong id="interestSavedHero">R$ 0,00</strong>
+              </div>
+            </div>
+          </section>
+
+          <section class="metrics-grid dashboard-kpis finance-kpis">
+            <article class="metric-card">
+              <span>Total com entrada</span>
+              <strong id="financeTotalMetric">R$ 0,00</strong>
+            </article>
+            <article class="metric-card">
+              <span>Total nominal parcelas</span>
+              <strong id="financeNominalMetric">R$ 0,00</strong>
+            </article>
+            <article class="metric-card">
+              <span>Falta nominal</span>
+              <strong id="financeRemainingMetric">R$ 0,00</strong>
+            </article>
+            <article class="metric-card">
+              <span>Pagamentos registrados</span>
+              <strong id="financeAmortizedMetric">R$ 0,00</strong>
+            </article>
+            <article class="metric-card">
+              <span>Juros automatico</span>
+              <strong id="financeRateMetric">0% a.m.</strong>
+            </article>
+            <article class="metric-card">
+              <span>Parcelas abertas</span>
+              <strong id="financeOpenInstallmentsMetric">0</strong>
+            </article>
+            <article class="metric-card">
+              <span>Parcelas pagas</span>
+              <strong id="financePaidInstallmentsMetric">0</strong>
+            </article>
+            <article class="metric-card wide-card">
+              <span>Caixa depois dos pagamentos</span>
+              <strong id="financeCashMetric">R$ 0,00</strong>
+            </article>
+          </section>
+
+          <section class="panel finance-progress-panel">
+            <div class="panel-title">
+              <div>
+                <span>Acompanhamento</span>
+                <h2>Pago, falta e composicao</h2>
+              </div>
+            </div>
+            <div class="finance-progress-summary" id="financeProgressSummary"></div>
+          </section>
+
+          <section class="content-grid">
+            <section class="panel form-panel">
+              <div class="panel-title">
+                <div>
+                  <span>Contrato</span>
+                  <h2>Base do financiamento</h2>
+                </div>
+              </div>
+              <form id="financeForm">
+                <div class="form-grid">
+                  <label>
+                    Valor de entrada
+                    <input type="number" id="financeDownPayment" min="0" step="0.01" inputmode="decimal" />
+                  </label>
+                  <label>
+                    Valor financiado
+                    <input type="number" id="financeFinancedAmount" min="0" step="0.01" inputmode="decimal" />
+                  </label>
+                  <label>
+                    Qtde de parcelas
+                    <input type="number" id="financeTotalInstallments" min="0" step="1" inputmode="numeric" />
+                  </label>
+                  <label>
+                    Valor da parcela
+                    <input type="number" id="financeInstallmentAmount" min="0" step="0.01" inputmode="decimal" />
+                  </label>
+                  <label>
+                    Primeiro vencimento
+                    <input type="text" id="financeFirstDueDate" inputmode="numeric" placeholder="dd/mm/aaaa" maxlength="10" pattern="\d{2}/\d{2}/\d{4}" />
+                  </label>
+                  <label>
+                    Saldo de caixa inicial
+                    <input type="number" id="financeCashOpeningBalance" min="0" step="0.01" inputmode="decimal" />
+                  </label>
+                  <label>
+                    Retirada de lucros
+                    <input type="number" id="financeProfitWithdrawal" min="0" step="0.01" inputmode="decimal" />
+                  </label>
+                  <label>
+                    Taxa de juros automatica
+                    <input type="text" id="financeAutoRate" readonly tabindex="-1" />
+                  </label>
+                </div>
+                <p class="inline-note" id="financeFormStatus">Financiamento salvo no banco local.</p>
+              </form>
+            </section>
+
+            <aside class="panel">
+              <div class="panel-title">
+                <div>
+                  <span>Leitura</span>
+                  <h2>Caixa e contrato</h2>
+                </div>
+              </div>
+              <div class="mini-grid" id="financeProjectionGrid"></div>
+            </aside>
+          </section>
+
+          <section class="content-grid reverse-mobile">
+            <section class="panel form-panel">
+              <div class="panel-title">
+                <div>
+                  <span>Pagamento</span>
+                  <h2>Registrar por mes</h2>
+                </div>
+              </div>
+              <form id="amortizationForm">
+                <div class="form-grid">
+                  <label>
+                    Mes do pagamento
+                    <input type="text" id="amortizationMonth" inputmode="numeric" placeholder="mm/aaaa" maxlength="7" />
+                  </label>
+                  <label>
+                    Valor pago
+                    <input type="number" id="amortizationAmount" min="0" step="0.01" inputmode="decimal" placeholder="em branco = valor nominal" />
+                  </label>
+                  <label class="full-field">
+                    Observacoes
+                    <textarea id="amortizationNotes" rows="3"></textarea>
+                  </label>
+                </div>
+                <div class="selected-installments-summary" id="selectedInstallmentsSummary">Nenhuma parcela selecionada.</div>
+                <button class="primary-button" type="submit">Salvar pagamento</button>
+              </form>
+            </section>
+
+            <aside class="panel">
+              <div class="panel-title">
+                <div>
+                  <span>Historico</span>
+                  <h2>Pagamentos salvos</h2>
+                </div>
+              </div>
+              <div class="amortization-list" id="amortizationHistory"></div>
+            </aside>
+          </section>
+
+          <section class="panel">
+            <div class="panel-title">
+              <div>
+                <span>Parcelas nominais</span>
+                <h2>Selecione as parcelas pagas</h2>
+              </div>
+              <div class="button-row installment-tools">
+                <button class="ghost-button" type="button" id="selectOpenInstallmentsBtn">Selecionar abertas</button>
+                <button class="ghost-button" type="button" id="clearInstallmentSelectionBtn">Limpar selecao</button>
+              </div>
+            </div>
+            <p class="finance-note">A baixa usa o valor nominal da parcela como referencia e registra desconto apenas quando o valor pago for menor.</p>
+            <div class="installments-wrap" id="installmentsTable"></div>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
